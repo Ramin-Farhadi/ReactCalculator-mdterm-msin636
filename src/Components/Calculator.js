@@ -1,11 +1,19 @@
 import { useState } from 'react';
 import React from 'react';
 
+// Needs to be fixed
+// Consitancy in spacing
+// No spacing between if statements 9&10, 13&14, but there is 16-18
+// Does the if evaluations need to continue if line 7 is true?
+// I can use multiple decimals - 9.3.2 is not a real number - Unexpected number error
+// Hit 05+06 getting: SyntaxError: Octal literals are not allowed in strict mode
+
 const Calculator = () => {
   const [output, setOutPut] = useState('');
   const calculator = (e) => {
     if (output === '' && e.target.outerText === 'Del') {
       setOutPut('');
+      return;
     }
     if (output.length <= 1 && e.target.outerText === '0') {
       setOutPut('');
@@ -14,7 +22,6 @@ const Calculator = () => {
     if (output.length > 0 && e.target.outerText === 'Del') {
       setOutPut(output.slice(0, output.length - 1));
     }
-
     if (e.target.outerText === '=') {
       setOutPut(eval(output));
     } else if (e.target.outerText === 'AC') {
