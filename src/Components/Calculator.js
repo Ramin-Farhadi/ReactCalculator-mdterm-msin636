@@ -1,35 +1,70 @@
 import { useState } from 'react';
 import React from 'react';
 
-// Needs to be fixed
-// Consitancy in spacing
-// No spacing between if statements 9&10, 13&14, but there is 16-18
-// Does the if evaluations need to continue if line 7 is true?
-// I can use multiple decimals - 9.3.2 is not a real number - Unexpected number error
-// Hit 05+06 getting: SyntaxError: Octal literals are not allowed in strict mode
-
 const Calculator = () => {
   const [output, setOutPut] = useState('');
+
   const calculator = (e) => {
+    // if output is empty then return
     if (output === '' && e.target.outerText === 'Del') {
       setOutPut('');
       return;
     }
+    // return a number 05 -> 5
     if (output.length <= 1 && e.target.outerText === '0') {
       setOutPut('');
       return;
     }
+    // 05 + 06 === 11
+    if (
+      (output[output.length - 1] === '+' ||
+        output[output.length - 1] === '-' ||
+        output[output.length - 1] === '/' ||
+        output[output.length - 1] === '*') &&
+      e.target.outerText === '0'
+    ) {
+      setOutPut(output);
+      return;
+    }
+    // Delete function
     if (output.length > 0 && e.target.outerText === 'Del') {
       setOutPut(output.slice(0, output.length - 1));
+      return;
     }
+    // Eval func help to calculate
     if (e.target.outerText === '=') {
       setOutPut(eval(output));
-    } else if (e.target.outerText === 'AC') {
+    }
+    // AC function helps to remove
+    else if (e.target.outerText === 'AC') {
       setOutPut('');
-    } else if (e.target.outerText !== 'Del') {
+    }
+    // Prevent users to use two .
+    else if (e.target.outerText !== 'Del') {
       if (e.target.outerText === '.' && output[output.length - 1] === '.') {
         setOutPut(output);
-      } else {
+      }
+      // Prevent user to use a number like 3.2.1 return to 3.21
+      else if (e.target.outerText === '.') {
+        let counter = 0;
+        for (let i = 0; i < output.length; i++) {
+          if (
+            output[i] === '+' ||
+            output[i] === '-' ||
+            output[i] === '*' ||
+            output[i] === '/'
+          ) {
+            counter = 0;
+          } else if (output[i] === '.') {
+            counter++;
+          }
+        }
+        counter === 0
+          ? setOutPut(output + e.target.outerText)
+          : setOutPut(output);
+      }
+      // If user use . -> .
+      else {
         setOutPut(output + e.target.outerText);
       }
     }
